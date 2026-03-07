@@ -11,21 +11,21 @@ erDiagram
         string lastName
         string email UK
     }
-    MoodLog{ 
+    MoodLog { 
         int id PK 
         date date 
         stringArray tags
         int sleepHours
-        stringArray activites
-        string energyLevel
+        stringArray activities
+        string energyLevels
         int user_id FK 
     }
-    Reflection{ 
+    Reflection { 
         int id PK 
         string reflection
         int moodlog_id FK
     }
-    Mood{ 
+    Mood { 
         int id PK 
         string mood
         string sentiment
