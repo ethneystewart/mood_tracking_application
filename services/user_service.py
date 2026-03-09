@@ -1,26 +1,30 @@
-users = []
-next_id = 1
+import psycopg2
+from database.db import cursor, conn
 
 
-def create_user(payload):
-    global next_id
-
-    new_user = {
-        "id": next_id,
-        "firstName": payload.firstName,
-        "lastName": payload.lastName,
-        "email": payload.email
-    }
-
-    next_id += 1
-    users.append(new_user)
-
-    return new_user
+def get_users():
+    cursor.execute("SELECT * FROM users")
+    users = cursor.fetchall()
+    return users
 
 
-def get_user(user_id: int):
-    for user in users:
-        if user["id"] == user_id:
-            return user
+def create_user(first_name, last_name, email):
 
-    return {"error": "User not found"}
+    try:
+        cursor.execute(
+            """
+            INSERT INTO users (firstName, lastName, email)
+            VALUES (%s, %s, %s)
+            RETURNING *
+            """,
+            (first_name, last_name, email)
+        )
+
+        user = cursor.fetchone()
+        conn.commit()
+
+        return user
+
+    except psycopg2.errors.UniqueViolation:
+        conn.rollback()
+        return {"error": "Email already exists"}

@@ -9,14 +9,13 @@ class UserCreate(BaseModel):
     lastName: str
     email: str
 
-
 class MoodLogCreate(BaseModel):
     date: date
     sleepHours: int
     energyLevels: str
-    activities: List[str]
-    tags: List[str]
-
+    activities: list[str]
+    tags: list[str]
+    user_id: int
 
 class MoodCreate(BaseModel):
     mood: str

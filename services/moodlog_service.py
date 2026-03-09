@@ -1,24 +1,23 @@
-moodlogs = []
-next_id = 1
+from database.db import cursor, conn
+
+def create_moodlog(date, sleepHours, energyLevels, activities, tags, user_id):
+
+    cursor.execute(
+        """
+        INSERT INTO moodlog (date, sleepHours, energyLevel, activities, tags, user_id)
+        VALUES (%s,%s,%s,%s,%s,%s)
+        RETURNING *
+        """,
+        (date, sleepHours, energyLevels, activities, tags, user_id)
+    )
+
+    moodlog = cursor.fetchone()
+    conn.commit()
+
+    return moodlog
 
 
 def get_moodlogs():
-    return moodlogs
 
-
-def create_moodlog(payload):
-    global next_id
-
-    new_moodlog = {
-        "id": next_id,
-        "date": payload.date,
-        "sleepHours": payload.sleepHours,
-        "energyLevels": payload.energyLevels,
-        "activities": payload.activities,
-        "tags": payload.tags
-    }
-
-    next_id += 1
-    moodlogs.append(new_moodlog)
-
-    return new_moodlog
+    cursor.execute("SELECT * FROM moodlog")
+    return cursor.fetchall()

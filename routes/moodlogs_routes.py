@@ -1,23 +1,23 @@
 from fastapi import APIRouter
+from models.request_models import MoodLogCreate
+from services.moodlog_service import create_moodlog, get_moodlogs
 
-router = APIRouter()
+router = APIRouter(prefix="/moodlogs", tags=["MoodLogs"])
 
-# get all mood logs 
-@router.get("/moodlogs")
-def get_moodlogs():
-    return {"message": "return all mood logs"}
 
-# get a specific mood log by id 
-@router.get("/moodlogs/{moodlog_id}")
-def get_moodlog(moodlog_id: int):
-    return {"message": f"return mood log {moodlog_id}"}
+@router.get("/")
+def get_moodlogs_route():
+    return get_moodlogs()
 
-#create a new mood log 
-@router.post("/moodlogs")
-def create_moodlog():
-    return {"message": "create a new mood log"}
 
-#delete a mood log by id
-@router.delete("/moodlogs/{moodlog_id}")
-def delete_moodlog(moodlog_id: int):
-    return {"message": f"delete mood log {moodlog_id}"}
+@router.post("/")
+def create_moodlog_route(log: MoodLogCreate):
+
+    return create_moodlog(
+        log.date,
+        log.sleepHours,
+        log.energyLevels,
+        log.activities,
+        log.tags,
+        log.user_id
+    )
