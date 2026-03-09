@@ -1,14 +1,21 @@
-moods = []
+from database.db import cursor, conn
 
-def create_mood(payload):
+def create_mood(mood, sentiment, moodlog_id):
 
-    new_mood = {
-        "id": len(moods) + 1,
-        "mood": payload.mood,
-        "sentiment": payload.sentiment,
-        "moodlog_id": payload.moodlog_id
-    }
+    cursor.execute(
+        """
+        INSERT INTO mood (mood, sentiment, moodlog_id)
+        VALUES (%s,%s,%s)
+        RETURNING *
+        """,
+        (mood, sentiment, moodlog_id)
+    )
+    mood = cursor.fetchone()
+    conn.commit()
 
-    moods.append(new_mood)
+    return mood
 
-    return new_mood
+def get_moods():
+
+    cursor.execute("SELECT * FROM mood")
+    return cursor.fetchall()

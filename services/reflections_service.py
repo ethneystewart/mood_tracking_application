@@ -1,13 +1,29 @@
-reflections = []
+from database.db import cursor, conn
 
-def create_reflection(payload):
+def create_reflection(reflection, moodlog_id):
 
-    new_reflection = {
-        "id": len(reflections) + 1,
-        "moodlog_id": payload.moodlog_id,
-        "reflection": payload.reflection
-    }
+    cursor.execute(
+        """
+        INSERT INTO reflection (moodlog_id, reflection)
+        VALUES (%s, %s)
+        RETURNING *
+        """,
+        (moodlog_id, reflection)
+    )
 
-    reflections.append(new_reflection)
+    reflection = cursor.fetchone()
+    conn.commit()
 
-    return new_reflection
+    return reflection
+
+def get_reflections(moodlog_id):
+
+    cursor.execute(
+        """
+        SELECT * FROM reflection
+        WHERE moodlog_id = %s
+        """,
+        (moodlog_id,)
+    )
+
+    return cursor.fetchall()
