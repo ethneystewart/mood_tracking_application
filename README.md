@@ -1,5 +1,7 @@
 Just learning for now ...
 
+Learning Roadmap: https://catnip-single-f71.notion.site/Mood-Tracker-App-Learning-Road-Map-31305a6c00f1800ea3baf797fd9b697f?source=copy_link
+
 ```mermaid
 erDiagram
     User ||--o{ MoodLog : has
